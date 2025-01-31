@@ -3,33 +3,49 @@ $("#register-event-handlers").click(() => tryCatch(registerEventHandlers));
 async function registerEventHandlers() {
   await Excel.run(async (context) => {
     // Add a selection changed event handler for the workbook.
-    context.workbook.worksheets.onSelectionChanged.add(onWorksheetSelectionChange);
-    console.log("Change the seleceted cell");
+    context.workbook.worksheets.onSelectionChanged.add(
+      onWorksheetSelectionChange
+    );
+    console.log("script running");
+    let intervalId;
+
+    function oneSecondLog() {
+      // check if an interval has already been set up
+      intervalId = setInterval(writeLog, 1000);
+    }
+
+    function writeLog() {
+      console.log("1 second has passed");
+    }
+
+    oneSecondLog();
     await context.sync();
   });
 }
 
-async function onWorksheetSelectionChange(args: Excel.WorksheetSelectionChangedEventArgs) {
+async function onWorksheetSelectionChange(
+  args: Excel.WorksheetSelectionChangedEventArgs
+) {
   await Excel.run(async (context) => {
+    console.log("clicked - connected to OBS");
+
     //get selected cell value
     let myWorkbook = context.workbook;
     let sheet = context.workbook.worksheets.getItem("Sheet1");
     let range = sheet.getRange("B2");
     range.load("text");
     await context.sync();
-    let cellText2 = range.text[0][0]
-    console.log(cellText2, "cellText2")
+    let cellText2 = range.text[0][0];
+    console.log(cellText2, "cellText2");
 
     range = sheet.getRange("B3");
     range.load("text");
     await context.sync();
-    let cellText3 = range.text[0][0]
+    let cellText3 = range.text[0][0];
     console.log(cellText3, "cellText3");
-  //
- 
-    await context.sync();
+    //
 
-    console.log("The active cell is " + range);
+    await context.sync();
 
     //connect to OBS Websocket localhost
     //Get websocket connection info
@@ -50,10 +66,12 @@ async function onWorksheetSelectionChange(args: Excel.WorksheetSelectionChangedE
         `ws://${websocketIP}:${websocketPort}`,
         websocketPassword,
         {
-          rpcVersion: 1
+          rpcVersion: 1,
         }
       );
-      console.log(`Connected to server ${obsWebSocketVersion} (using RPC ${negotiatedRpcVersion})`);
+      console.log(
+        `Connected to server ${obsWebSocketVersion} (using RPC ${negotiatedRpcVersion})`
+      );
     } catch (error) {
       console.error("Failed to connect", error.code, error.message);
     }
@@ -62,7 +80,9 @@ async function onWorksheetSelectionChange(args: Excel.WorksheetSelectionChangedE
     });
 
     //set OBS Scene
-    await obs.call("SetCurrentProgramScene", { sceneName: document.getElementById("Scene").value });
+    await obs.call("SetCurrentProgramScene", {
+      sceneName: document.getElementById("Scene").value,
+    });
 
     //set OBS source text
     await obs.call(
@@ -70,8 +90,8 @@ async function onWorksheetSelectionChange(args: Excel.WorksheetSelectionChangedE
       {
         inputName: document.getElementById("Source").value,
         inputSettings: {
-          text: cellText2
-        }
+          text: cellText2,
+        },
       },
       (err, data) => {
         /* Error message and data. */
@@ -83,8 +103,8 @@ async function onWorksheetSelectionChange(args: Excel.WorksheetSelectionChangedE
       {
         inputName: document.getElementById("Source2").value,
         inputSettings: {
-          text: cellText3
-        }
+          text: cellText3,
+        },
       },
       (err, data) => {
         /* Error message and data. */
