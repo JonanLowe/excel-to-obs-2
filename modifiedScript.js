@@ -3,7 +3,7 @@ $("#register-event-handlers").click(() => tryCatch(beginTimer));
 async function beginTimer() {
   await Excel.run(async (context) => {
     // Add a selection changed event handler for the workbook.
-    setInterval(updateInfo, 1000)
+    setInterval(updateInfo, 2000);
     console.log("updating cells on a timer");
     await context.sync();
   });
@@ -24,7 +24,7 @@ async function updateInfo(args: Excel.WorksheetSelectionChangedEventArgs) {
   await Excel.run(async (context) => {
     //get selected cell value
     clicked = !clicked;
-    console.log(clicked)
+    console.log(clicked);
 
     let myWorkbook = context.workbook;
     let activeCell = myWorkbook.getActiveCell();
@@ -32,7 +32,7 @@ async function updateInfo(args: Excel.WorksheetSelectionChangedEventArgs) {
     await context.sync();
     let sheet = context.workbook.worksheets.getItem("Sheet1");
     let range = sheet.getRange("A1");
-    clicked ? range = sheet.getRange("B2") : range = sheet.getRange("B3") 
+    clicked ? (range = sheet.getRange("B2")) : (range = sheet.getRange("B3"));
     range.load("text");
     await context.sync();
     let cellText = range.text[0][0];
@@ -40,7 +40,7 @@ async function updateInfo(args: Excel.WorksheetSelectionChangedEventArgs) {
     // let cellText = activeCell.values.toString();
     console.log("The active cell is " + cellText);
     sheet = context.workbook.worksheets.getItem("Sheet1");
-    clicked ? range = sheet.getRange("B3") : range = sheet.getRange("B4") 
+    clicked ? (range = sheet.getRange("B4")) : (range = sheet.getRange("B5"));
     range.load("text");
     await context.sync();
     let cellText2 = range.text[0][0];
@@ -65,10 +65,12 @@ async function updateInfo(args: Excel.WorksheetSelectionChangedEventArgs) {
         `ws://${websocketIP}:${websocketPort}`,
         websocketPassword,
         {
-          rpcVersion: 1
+          rpcVersion: 1,
         }
       );
-      console.log(`Connected to server ${obsWebSocketVersion} (using RPC ${negotiatedRpcVersion})`);
+      console.log(
+        `Connected to server ${obsWebSocketVersion} (using RPC ${negotiatedRpcVersion})`
+      );
     } catch (error) {
       console.error("Failed to connect", error.code, error.message);
     }
@@ -77,7 +79,9 @@ async function updateInfo(args: Excel.WorksheetSelectionChangedEventArgs) {
     });
 
     //set OBS Scene
-    await obs.call("SetCurrentProgramScene", { sceneName: document.getElementById("Scene").value });
+    await obs.call("SetCurrentProgramScene", {
+      sceneName: document.getElementById("Scene").value,
+    });
 
     //set OBS source text
     await obs.call(
@@ -85,8 +89,8 @@ async function updateInfo(args: Excel.WorksheetSelectionChangedEventArgs) {
       {
         inputName: document.getElementById("Source").value,
         inputSettings: {
-          text: cellText
-        }
+          text: cellText,
+        },
       },
       (err, data) => {
         /* Error message and data. */
@@ -99,8 +103,8 @@ async function updateInfo(args: Excel.WorksheetSelectionChangedEventArgs) {
       {
         inputName: document.getElementById("Source2").value,
         inputSettings: {
-          text: cellText2
-        }
+          text: cellText2,
+        },
       },
       (err, data) => {
         /* Error message and data. */
