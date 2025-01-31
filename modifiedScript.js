@@ -1,4 +1,5 @@
 $("#register-event-handlers").click(() => tryCatch(registerEventHandlers));
+$("#startTimer").click(() => tryCatch(startTimer));
 
 async function registerEventHandlers() {
   await Excel.run(async (context) => {
@@ -7,19 +8,42 @@ async function registerEventHandlers() {
       onWorksheetSelectionChange
     );
     console.log("script running");
-    let intervalId;
-
-    function oneSecondLog() {
-      // check if an interval has already been set up
-      intervalId = setInterval(writeLog, 1000);
-    }
-
-    function writeLog() {
-      console.log("1 second has passed");
-    }
-
-    oneSecondLog();
     await context.sync();
+  });
+}
+
+function startTimer() {
+  let intervalId;
+  function oneSecondLog() {
+    // check if an interval has already been set up
+    intervalId = setInterval(writeLog, 1000);
+  }
+  function writeLog() {
+    console.log("1 second has passed");
+  }
+  oneSecondLog();
+}
+
+async function changeCellTimer() {
+  console.log("change cell timer started");
+  let intervalId;
+  function oneSecondCellChange() {
+    // check if an interval has already been set up
+    console.log("change cell one second timer");
+    intervalId = setInterval(changeCells, 1000);
+  }
+  oneSecondCellChange();
+}
+
+async function changeCells() {
+  await Excel.run(async (context) => {
+    console.log("changing cells");
+    let sheet = context.workbook.worksheets.getItem("Sheet1");
+    let range = sheet.getRange("B3");
+    range.load("text");
+    await context.sync();
+    let cellText3 = range.text[0][0];
+    console.log(cellText3, "cellText3");
   });
 }
 
@@ -28,24 +52,17 @@ async function onWorksheetSelectionChange(
 ) {
   await Excel.run(async (context) => {
     console.log("clicked - connected to OBS");
+    await changeCellTimer();
 
     //get selected cell value
-    let myWorkbook = context.workbook;
     let sheet = context.workbook.worksheets.getItem("Sheet1");
     let range = sheet.getRange("B2");
     range.load("text");
     await context.sync();
     let cellText2 = range.text[0][0];
     console.log(cellText2, "cellText2");
-
-    range = sheet.getRange("B3");
-    range.load("text");
-    await context.sync();
-    let cellText3 = range.text[0][0];
-    console.log(cellText3, "cellText3");
+    // changeCells();
     //
-
-    await context.sync();
 
     //connect to OBS Websocket localhost
     //Get websocket connection info
@@ -69,6 +86,7 @@ async function onWorksheetSelectionChange(
           rpcVersion: 1,
         }
       );
+
       console.log(
         `Connected to server ${obsWebSocketVersion} (using RPC ${negotiatedRpcVersion})`
       );
