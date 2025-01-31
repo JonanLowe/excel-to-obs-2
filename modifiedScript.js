@@ -65,12 +65,10 @@ async function updateInfo(args: Excel.WorksheetSelectionChangedEventArgs) {
         `ws://${websocketIP}:${websocketPort}`,
         websocketPassword,
         {
-          rpcVersion: 1,
+          rpcVersion: 1
         }
       );
-      console.log(
-        `Connected to server ${obsWebSocketVersion} (using RPC ${negotiatedRpcVersion})`
-      );
+      console.log(`Connected to server ${obsWebSocketVersion} (using RPC ${negotiatedRpcVersion})`);
     } catch (error) {
       console.error("Failed to connect", error.code, error.message);
     }
@@ -79,9 +77,7 @@ async function updateInfo(args: Excel.WorksheetSelectionChangedEventArgs) {
     });
 
     //set OBS Scene
-    await obs.call("SetCurrentProgramScene", {
-      sceneName: document.getElementById("Scene").value,
-    });
+    await obs.call("SetCurrentProgramScene", { sceneName: document.getElementById("Scene").value });
 
     //set OBS source text
     await obs.call(
@@ -89,8 +85,8 @@ async function updateInfo(args: Excel.WorksheetSelectionChangedEventArgs) {
       {
         inputName: document.getElementById("Source").value,
         inputSettings: {
-          text: cellText,
-        },
+          text: cellText
+        }
       },
       (err, data) => {
         /* Error message and data. */
@@ -103,8 +99,8 @@ async function updateInfo(args: Excel.WorksheetSelectionChangedEventArgs) {
       {
         inputName: document.getElementById("Source2").value,
         inputSettings: {
-          text: cellText2,
-        },
+          text: cellText2
+        }
       },
       (err, data) => {
         /* Error message and data. */
