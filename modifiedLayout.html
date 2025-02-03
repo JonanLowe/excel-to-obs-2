@@ -12,33 +12,21 @@
 	<Input id="Port" class="ms-Button" value="4455"></Input>
 	<span class="ms-Button-label">Enter WebSocket Server Password</span><br>
 	<Input type="password" id="PW" class="ms-Button"></Input>
-	<h3>OBS WebSocket Server Settings</h3>
 
+	<h3>OBS Scene & Source Settings</h3>
+	<span class="ms-Button-label">Set Timer</span>
+	<Input id="Timer" class="ms-Button" value="2000"></Input>
 	<span class="ms-Button-label">Enter OBS Scene Name</span>
 	<Input id="Scene" class="ms-Button" value="Example Scene"></Input>
-
-	<span class="ms-Button-label">Enter OBS Source Name 1</span>
+	<span class="ms-Button-label">Enter OBS Source for 'Class'</span>
 	<Input id="ClassField" class="ms-Button" value="Class"></Input>
-	<span class="ms-Button-label">Enter OBS Source Name 1</span>
+	<span class="ms-Button-label">Enter OBS Source for 1st Place</span>
 	<Input id="Field1" class="ms-Button" value="1st Place Cow"></Input>
-	<span class="ms-Button-label">Enter OBS Source Name 2</span>
+	<span class="ms-Button-label">Enter OBS Source for 2nd Place</span>
 	<Input id="Field2" class="ms-Button" value="2nd Place Cow"></Input>
-	<span class="ms-Button-label">Enter OBS Source Name 3</span>
+	<span class="ms-Button-label">Enter OBS Source for 3rd Place</span>
 	<Input id="Field3" class="ms-Button" value="3rd Place Cow"></Input>
-	<button id="register-event-handlers" class="ms-Button">
-	    <span class="ms-Button-label">Connect to OBS WebSocket Server</span>
+	<button id="run-script" class="ms-Button">
+	<span class="ms-Button-label">Connect to OBS WebSocket Server</span>
     </button>
-	<p>The <code>onSelectionChanged</code> events being listened for are:</p>
-	<ul>
-		<li><code>Worksheet</code></li>
-	</ul>
-</section>
-
-<section class="samples ms-font-m">
-	<h3>Try it out</h3>
-</section>
-
-<section class="samples ms-font-m">
-	<p>The console will log the values reported by the different <code>onSelectionChanged</code> events. Change the
-		cell in the worksheet to see the results.</p>
 </section>

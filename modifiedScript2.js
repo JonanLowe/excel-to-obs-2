@@ -1,44 +1,29 @@
-$("#register-event-handlers").click(() => tryCatch(beginTimer));
+$("#run-script").click(() => tryCatch(beginTimer));
 
 async function beginTimer() {
+  const timer = parseInt(document.getElementById("Timer").value);
+  console.log(timer);
+
   await Excel.run(async (context) => {
-    // Add a selection changed event handler for the workbook.
-    setInterval(updateInfo, 2000);
+    setInterval(updateInfo, timer);
     console.log("updating cells on a timer");
     await context.sync();
   });
 }
 
-let clicked = false;
-
-i = 0;
+let i = 0;
 
 async function updateInfo() {
   await Excel.run(async (context) => {
-    //get selected cells value:
-
     const worksheets = [];
 
     await Excel.run(async (context) => {
       let sheets = context.workbook.worksheets;
       sheets.load("items/name");
-
       await context.sync();
 
-      console.log(sheets.items, "sheets.items");
-
-      if (sheets.items.length > 1) {
-        console.log(
-          `There are ${sheets.items.length} worksheets in the workbook:`
-        );
-      } else {
-        console.log(`There is one worksheet in the workbook:`);
-      }
-
       sheets.items.forEach(function (sheet) {
-        console.log(sheet.name);
         worksheets.push(sheet.name);
-        console.log(worksheets, "worksheets");
       });
     });
 
@@ -51,14 +36,13 @@ async function updateInfo() {
     let secondPlace = range.text[2][0];
     let thirdPlace = range.text[3][0];
 
-    //iterate:
-    i === worksheets.length - 1 ? (i = 0) : i++;
-
     if (!firstPlace) {
+      i++;
       updateInfo();
       return;
     }
 
+    i === worksheets.length - 1 ? (i = 0) : i++;
     //connect to OBS Websocket localhost
     //Get websocket connection info
     //Enter the websocketIP address
