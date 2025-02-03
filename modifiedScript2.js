@@ -26,28 +26,39 @@ async function updateInfo() {
   await Excel.run(async (context) => {
     //get selected cell value
 
-    //toggle variable to alternate cell selection:
-    clicked = !clicked;
-    console.log(clicked);
+    // console.log(worksheets[i], "worksheets[i]");
+    // //toggle variable to alternate cell selection:
+    // clicked = !clicked;
+    // console.log(clicked);
 
-    let sheet = context.workbook.worksheets.getItem("Sheet1");
-    let range = sheet.getRange("A1");
-    clicked ? (range = sheet.getRange("B2")) : (range = sheet.getRange("B3"));
-    range.load("text");
+    let sheet = context.workbook.worksheets.getItem(worksheets[i]);
+    let className = sheet.getRange("B1");
+    className.load("text");
     await context.sync();
-    let cellText = range.text[0][0];
+    let cellText = className.text[0][0];
+    console.log(cellText, "cellText (className");
+
+    // let secondPlace = sheet.getRange("B3");
+    // clicked ? (range = sheet.getRange("B2")) : (range = sheet.getRange("B3"));
     // console.log(cellText, "cellText");
     // let cellText = activeCell.values.toString();
     // console.log("The active cell is " + cellText);
-    sheet = context.workbook.worksheets.getItem("Sheet1");
-    clicked ? (range = sheet.getRange("B4")) : (range = sheet.getRange("B5"));
+
+    let range = sheet.getRange("B2:E6");
     range.load("text");
     await context.sync();
-    let cellText2 = range.text[0][0];
+    let firstPlace = range.text[0][0];
+    console.log(firstPlace, "firstPlace");
+    let fullRangeText = range.text;
+    console.log(fullRangeText[0], "fullRangeText[0]");
+
+    // firstPlace.load("text");
+    await context.sync();
+    let cellText2 = firstPlace;
     console.log(cellText2, "cellText2");
 
     //iterate:
-    i = worksheets.length ? (i = 0) : i++;
+    i === worksheets.length - 1 ? (i = 0) : i++;
     console.log(i, "<<<<<< i = ");
 
     //connect to OBS Websocket localhost
