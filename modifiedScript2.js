@@ -89,9 +89,37 @@ async function updateInfo() {
     await obs.call(
       "SetInputSettings",
       {
-        inputName: document.getElementById("Source2").value,
+        inputName: document.getElementById("Field1").value,
         inputSettings: {
           text: firstPlace,
+        },
+      },
+      (err, data) => {
+        /* Error message and data. */
+        // console.log('Using call SetInputSettings:', err, data);
+      }
+    );
+
+    await obs.call(
+      "SetInputSettings",
+      {
+        inputName: document.getElementById("Field2").value,
+        inputSettings: {
+          text: secondPlace,
+        },
+      },
+      (err, data) => {
+        /* Error message and data. */
+        // console.log('Using call SetInputSettings:', err, data);
+      }
+    );
+
+    await obs.call(
+      "SetInputSettings",
+      {
+        inputName: document.getElementById("Field3").value,
+        inputSettings: {
+          text: thirdPlace,
         },
       },
       (err, data) => {
