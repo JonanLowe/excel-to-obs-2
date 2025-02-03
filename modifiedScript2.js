@@ -29,7 +29,7 @@ async function updateInfo() {
     //iterate:
     i === worksheets.length - 1 ? (i = 0) : i++;
 
-    if (!thirdPlace) {
+    if (!firstPlace) {
       updateInfo();
       return;
     }
