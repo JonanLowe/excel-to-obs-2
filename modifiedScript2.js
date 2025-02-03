@@ -19,20 +19,17 @@ async function beginTimer() {
 // }
 
 let clicked = false;
+const worksheets = ["Sheet1", "Sheet2", "Sheet3"];
+i = 0;
 
-async function updateInfo(args: Excel.WorksheetSelectionChangedEventArgs) {
+async function updateInfo() {
   await Excel.run(async (context) => {
     //get selected cell value
 
     //toggle variable to alternate cell selection:
     clicked = !clicked;
     console.log(clicked);
-    
 
-    let myWorkbook = context.workbook;
-    let activeCell = myWorkbook.getActiveCell();
-    activeCell.load("values");
-    await context.sync();
     let sheet = context.workbook.worksheets.getItem("Sheet1");
     let range = sheet.getRange("A1");
     clicked ? (range = sheet.getRange("B2")) : (range = sheet.getRange("B3"));
@@ -48,6 +45,10 @@ async function updateInfo(args: Excel.WorksheetSelectionChangedEventArgs) {
     await context.sync();
     let cellText2 = range.text[0][0];
     console.log(cellText2, "cellText2");
+
+    //iterate:
+    i = worksheets.length ? (i = 0) : i++;
+    console.log(i, "<<<<<< i = ");
 
     //connect to OBS Websocket localhost
     //Get websocket connection info
@@ -68,10 +69,12 @@ async function updateInfo(args: Excel.WorksheetSelectionChangedEventArgs) {
         `ws://${websocketIP}:${websocketPort}`,
         websocketPassword,
         {
-          rpcVersion: 1
+          rpcVersion: 1,
         }
       );
-      console.log(`Connected to server ${obsWebSocketVersion} (using RPC ${negotiatedRpcVersion})`);
+      console.log(
+        `Connected to server ${obsWebSocketVersion} (using RPC ${negotiatedRpcVersion})`
+      );
     } catch (error) {
       console.error("Failed to connect", error.code, error.message);
     }
@@ -80,7 +83,9 @@ async function updateInfo(args: Excel.WorksheetSelectionChangedEventArgs) {
     });
 
     //set OBS Scene
-    await obs.call("SetCurrentProgramScene", { sceneName: document.getElementById("Scene").value });
+    await obs.call("SetCurrentProgramScene", {
+      sceneName: document.getElementById("Scene").value,
+    });
 
     //set OBS source text
     await obs.call(
@@ -88,8 +93,8 @@ async function updateInfo(args: Excel.WorksheetSelectionChangedEventArgs) {
       {
         inputName: document.getElementById("Source").value,
         inputSettings: {
-          text: cellText
-        }
+          text: cellText,
+        },
       },
       (err, data) => {
         /* Error message and data. */
@@ -102,8 +107,8 @@ async function updateInfo(args: Excel.WorksheetSelectionChangedEventArgs) {
       {
         inputName: document.getElementById("Source2").value,
         inputSettings: {
-          text: cellText2
-        }
+          text: cellText2,
+        },
       },
       (err, data) => {
         /* Error message and data. */
