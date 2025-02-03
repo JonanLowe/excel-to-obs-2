@@ -9,50 +9,30 @@ async function beginTimer() {
   });
 }
 
-// async function registerEventHandlers() {
-//   await Excel.run(async (context) => {
-//     // Add a selection changed event handler for the workbook.
-//     context.workbook.worksheets.onSelectionChanged.add(updateInfo);
-//     console.log("Change the selected cell");
-//     await context.sync();
-//   });
-// }
-
 let clicked = false;
-const worksheets = ["Sheet1", "Sheet2", "Sheet3"];
+const worksheets = ["Sheet1", "Sheet2", "Sheet3", "Sheet4"];
 i = 0;
 
 async function updateInfo() {
   await Excel.run(async (context) => {
-    //get selected cell value
-
-    // console.log(worksheets[i], "worksheets[i]");
-    // //toggle variable to alternate cell selection:
-    // clicked = !clicked;
-    // console.log(clicked);
+    //get selected cells value:
 
     let sheet = context.workbook.worksheets.getItem(worksheets[i]);
     let range = sheet.getRange("B1:B6");
     range.load("text");
     await context.sync();
     let className = range.text[0][0];
-
-    // let secondPlace = sheet.getRange("B3");
-    // clicked ? (range = sheet.getRange("B2")) : (range = sheet.getRange("B3"));
-    // console.log(cellText, "cellText");
-    // let cellText = activeCell.values.toString();
-    // console.log("The active cell is " + cellText);
     let firstPlace = range.text[1][0];
-    console.log(firstPlace, "firstPlace");
-    // let fullRangeText = range.text;
-    // console.log(fullRangeText[0], "fullRangeText[0]");
-
-    // firstPlace.load("text");
-    // await context.sync();
+    let secondPlace = range.text[2][0];
+    let thirdPlace = range.text[3][0];
 
     //iterate:
     i === worksheets.length - 1 ? (i = 0) : i++;
-    console.log(i, "<<<<<< i = ");
+
+    if (!thirdPlace) {
+      updateInfo();
+      return;
+    }
 
     //connect to OBS Websocket localhost
     //Get websocket connection info
