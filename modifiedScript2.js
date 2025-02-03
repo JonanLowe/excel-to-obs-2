@@ -10,12 +10,37 @@ async function beginTimer() {
 }
 
 let clicked = false;
-const worksheets = ["Sheet1", "Sheet2", "Sheet3", "Sheet5", "Sheet4"];
+
 i = 0;
 
 async function updateInfo() {
   await Excel.run(async (context) => {
     //get selected cells value:
+
+    const worksheets = [];
+
+    await Excel.run(async (context) => {
+      let sheets = context.workbook.worksheets;
+      sheets.load("items/name");
+
+      await context.sync();
+
+      console.log(sheets.items, "sheets.items");
+
+      if (sheets.items.length > 1) {
+        console.log(
+          `There are ${sheets.items.length} worksheets in the workbook:`
+        );
+      } else {
+        console.log(`There is one worksheet in the workbook:`);
+      }
+
+      sheets.items.forEach(function (sheet) {
+        console.log(sheet.name);
+        worksheets.push(sheet.name);
+        console.log(worksheets, "worksheets");
+      });
+    });
 
     let sheet = context.workbook.worksheets.getItem(worksheets[i]);
     let range = sheet.getRange("B1:B6");
@@ -53,10 +78,12 @@ async function updateInfo() {
         `ws://${websocketIP}:${websocketPort}`,
         websocketPassword,
         {
-          rpcVersion: 1
+          rpcVersion: 1,
         }
       );
-      console.log(`Connected to server ${obsWebSocketVersion} (using RPC ${negotiatedRpcVersion})`);
+      console.log(
+        `Connected to server ${obsWebSocketVersion} (using RPC ${negotiatedRpcVersion})`
+      );
     } catch (error) {
       console.error("Failed to connect", error.code, error.message);
     }
@@ -66,7 +93,7 @@ async function updateInfo() {
 
     //set OBS Scene
     await obs.call("SetCurrentProgramScene", {
-      sceneName: document.getElementById("Scene").value
+      sceneName: document.getElementById("Scene").value,
     });
 
     //set OBS source text
@@ -74,23 +101,38 @@ async function updateInfo() {
     await obs.call(
       "SetInputSettings",
       {
-        inputName: document.getElementById("Field1").value,
+        inputName: document.getElementById("ClassField").value,
         inputSettings: {
-          text: firstPlace
-        }
+          text: className,
+        },
       },
       (err, data) => {
         /* Error message and data. */
         // console.log('Using call SetInputSettings:', err, data);
       }
     );
+
+    await obs.call(
+      "SetInputSettings",
+      {
+        inputName: document.getElementById("Field1").value,
+        inputSettings: {
+          text: firstPlace,
+        },
+      },
+      (err, data) => {
+        /* Error message and data. */
+        // console.log('Using call SetInputSettings:', err, data);
+      }
+    );
+
     await obs.call(
       "SetInputSettings",
       {
         inputName: "2nd",
         inputSettings: {
-          text: secondPlace ? "2nd:" : " "
-        }
+          text: secondPlace ? "2nd:" : " ",
+        },
       },
       (err, data) => {
         /* Error message and data. */
@@ -102,8 +144,8 @@ async function updateInfo() {
       {
         inputName: document.getElementById("Field2").value,
         inputSettings: {
-          text: secondPlace
-        }
+          text: secondPlace,
+        },
       },
       (err, data) => {
         /* Error message and data. */
@@ -116,8 +158,8 @@ async function updateInfo() {
       {
         inputName: "3rd",
         inputSettings: {
-          text: thirdPlace ? "3rd:" : " "
-        }
+          text: thirdPlace ? "3rd:" : " ",
+        },
       },
       (err, data) => {
         /* Error message and data. */
@@ -129,8 +171,8 @@ async function updateInfo() {
       {
         inputName: document.getElementById("Field3").value,
         inputSettings: {
-          text: thirdPlace
-        }
+          text: thirdPlace,
+        },
       },
       (err, data) => {
         /* Error message and data. */
