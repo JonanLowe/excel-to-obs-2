@@ -32,30 +32,23 @@ async function updateInfo() {
     // console.log(clicked);
 
     let sheet = context.workbook.worksheets.getItem(worksheets[i]);
-    let className = sheet.getRange("B1");
-    className.load("text");
+    let range = sheet.getRange("B1:B6");
+    range.load("text");
     await context.sync();
-    let cellText = className.text[0][0];
-    console.log(cellText, "cellText (className");
+    let className = range.text[0][0];
 
     // let secondPlace = sheet.getRange("B3");
     // clicked ? (range = sheet.getRange("B2")) : (range = sheet.getRange("B3"));
     // console.log(cellText, "cellText");
     // let cellText = activeCell.values.toString();
     // console.log("The active cell is " + cellText);
-
-    let range = sheet.getRange("B2:E6");
-    range.load("text");
-    await context.sync();
-    let firstPlace = range.text[0][0];
+    let firstPlace = range.text[1][0];
     console.log(firstPlace, "firstPlace");
-    let fullRangeText = range.text;
-    console.log(fullRangeText[0], "fullRangeText[0]");
+    // let fullRangeText = range.text;
+    // console.log(fullRangeText[0], "fullRangeText[0]");
 
     // firstPlace.load("text");
-    await context.sync();
-    let cellText2 = firstPlace;
-    console.log(cellText2, "cellText2");
+    // await context.sync();
 
     //iterate:
     i === worksheets.length - 1 ? (i = 0) : i++;
@@ -104,7 +97,7 @@ async function updateInfo() {
       {
         inputName: document.getElementById("Source").value,
         inputSettings: {
-          text: cellText,
+          text: className,
         },
       },
       (err, data) => {
@@ -118,7 +111,7 @@ async function updateInfo() {
       {
         inputName: document.getElementById("Source2").value,
         inputSettings: {
-          text: cellText2,
+          text: firstPlace,
         },
       },
       (err, data) => {
