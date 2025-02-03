@@ -10,7 +10,7 @@ async function beginTimer() {
 }
 
 let clicked = false;
-const worksheets = ["Sheet1", "Sheet2", "Sheet3", "Sheet4"];
+const worksheets = ["Sheet1", "Sheet2", "Sheet3", "Sheet5", "Sheet4"];
 i = 0;
 
 async function updateInfo() {
@@ -53,12 +53,10 @@ async function updateInfo() {
         `ws://${websocketIP}:${websocketPort}`,
         websocketPassword,
         {
-          rpcVersion: 1,
+          rpcVersion: 1
         }
       );
-      console.log(
-        `Connected to server ${obsWebSocketVersion} (using RPC ${negotiatedRpcVersion})`
-      );
+      console.log(`Connected to server ${obsWebSocketVersion} (using RPC ${negotiatedRpcVersion})`);
     } catch (error) {
       console.error("Failed to connect", error.code, error.message);
     }
@@ -68,45 +66,44 @@ async function updateInfo() {
 
     //set OBS Scene
     await obs.call("SetCurrentProgramScene", {
-      sceneName: document.getElementById("Scene").value,
+      sceneName: document.getElementById("Scene").value
     });
 
     //set OBS source text
-    await obs.call(
-      "SetInputSettings",
-      {
-        inputName: document.getElementById("Source").value,
-        inputSettings: {
-          text: className,
-        },
-      },
-      (err, data) => {
-        /* Error message and data. */
-        // console.log('Using call SetInputSettings:', err, data);
-      }
-    );
 
     await obs.call(
       "SetInputSettings",
       {
         inputName: document.getElementById("Field1").value,
         inputSettings: {
-          text: firstPlace,
-        },
+          text: firstPlace
+        }
       },
       (err, data) => {
         /* Error message and data. */
         // console.log('Using call SetInputSettings:', err, data);
       }
     );
-
+    await obs.call(
+      "SetInputSettings",
+      {
+        inputName: "2nd",
+        inputSettings: {
+          text: secondPlace ? "2nd:" : " "
+        }
+      },
+      (err, data) => {
+        /* Error message and data. */
+        // console.log('Using call SetInputSettings:', err, data);
+      }
+    );
     await obs.call(
       "SetInputSettings",
       {
         inputName: document.getElementById("Field2").value,
         inputSettings: {
-          text: secondPlace,
-        },
+          text: secondPlace
+        }
       },
       (err, data) => {
         /* Error message and data. */
@@ -117,16 +114,30 @@ async function updateInfo() {
     await obs.call(
       "SetInputSettings",
       {
-        inputName: document.getElementById("Field3").value,
+        inputName: "3rd",
         inputSettings: {
-          text: thirdPlace,
-        },
+          text: thirdPlace ? "3rd:" : " "
+        }
       },
       (err, data) => {
         /* Error message and data. */
         // console.log('Using call SetInputSettings:', err, data);
       }
     );
+    await obs.call(
+      "SetInputSettings",
+      {
+        inputName: document.getElementById("Field3").value,
+        inputSettings: {
+          text: thirdPlace
+        }
+      },
+      (err, data) => {
+        /* Error message and data. */
+        // console.log('Using call SetInputSettings:', err, data);
+      }
+    );
+
     await obs.disconnect();
   });
 }
