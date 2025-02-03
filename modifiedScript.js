@@ -23,6 +23,8 @@ let clicked = false;
 async function updateInfo(args: Excel.WorksheetSelectionChangedEventArgs) {
   await Excel.run(async (context) => {
     //get selected cell value
+
+    //toggle variable to alternate cell selection:
     clicked = !clicked;
     console.log(clicked);
 
@@ -36,9 +38,9 @@ async function updateInfo(args: Excel.WorksheetSelectionChangedEventArgs) {
     range.load("text");
     await context.sync();
     let cellText = range.text[0][0];
-    console.log(cellText, "cellText");
+    // console.log(cellText, "cellText");
     // let cellText = activeCell.values.toString();
-    console.log("The active cell is " + cellText);
+    // console.log("The active cell is " + cellText);
     sheet = context.workbook.worksheets.getItem("Sheet1");
     clicked ? (range = sheet.getRange("B4")) : (range = sheet.getRange("B5"));
     range.load("text");
