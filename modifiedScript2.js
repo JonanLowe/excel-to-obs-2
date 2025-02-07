@@ -22,19 +22,24 @@ async function updateInfo() {
       sheets.load("items/name");
       await context.sync();
 
-      sheets.items.forEach(function (sheet) {
+      sheets.items.forEach(function(sheet) {
         worksheets.push(sheet.name);
       });
     });
 
     let sheet = context.workbook.worksheets.getItem(worksheets[i]);
     let range = sheet.getRange("B1:B6");
+    let sponsor = sheet.getRange("D1");
     range.load("text");
+    sponsor.load("text");
     await context.sync();
     let className = range.text[0][0];
     let firstPlace = range.text[1][0];
     let secondPlace = range.text[2][0];
     let thirdPlace = range.text[3][0];
+    let thisSponsor = sponsor.text[0][0];
+
+    console.log(thisSponsor, "info from excel");
 
     if (!firstPlace) {
       i++;
@@ -62,12 +67,10 @@ async function updateInfo() {
         `ws://${websocketIP}:${websocketPort}`,
         websocketPassword,
         {
-          rpcVersion: 1,
+          rpcVersion: 1
         }
       );
-      console.log(
-        `Connected to server ${obsWebSocketVersion} (using RPC ${negotiatedRpcVersion})`
-      );
+      console.log(`Connected to server ${obsWebSocketVersion} (using RPC ${negotiatedRpcVersion})`);
     } catch (error) {
       console.error("Failed to connect", error.code, error.message);
     }
@@ -77,7 +80,7 @@ async function updateInfo() {
 
     //set OBS Scene
     await obs.call("SetCurrentProgramScene", {
-      sceneName: document.getElementById("Scene").value,
+      sceneName: document.getElementById("Scene").value
     });
 
     //set OBS source text
@@ -87,8 +90,8 @@ async function updateInfo() {
       {
         inputName: document.getElementById("ClassField").value,
         inputSettings: {
-          text: className,
-        },
+          text: className
+        }
       },
       (err, data) => {
         /* Error message and data. */
@@ -101,8 +104,8 @@ async function updateInfo() {
       {
         inputName: document.getElementById("Field1").value,
         inputSettings: {
-          text: firstPlace,
-        },
+          text: firstPlace
+        }
       },
       (err, data) => {
         /* Error message and data. */
@@ -115,8 +118,8 @@ async function updateInfo() {
       {
         inputName: "2nd",
         inputSettings: {
-          text: secondPlace ? "2nd:" : " ",
-        },
+          text: secondPlace ? "2nd:" : " "
+        }
       },
       (err, data) => {
         /* Error message and data. */
@@ -128,8 +131,8 @@ async function updateInfo() {
       {
         inputName: document.getElementById("Field2").value,
         inputSettings: {
-          text: secondPlace,
-        },
+          text: secondPlace
+        }
       },
       (err, data) => {
         /* Error message and data. */
@@ -142,8 +145,8 @@ async function updateInfo() {
       {
         inputName: "3rd",
         inputSettings: {
-          text: thirdPlace ? "3rd:" : " ",
-        },
+          text: thirdPlace ? "3rd:" : " "
+        }
       },
       (err, data) => {
         /* Error message and data. */
@@ -155,8 +158,22 @@ async function updateInfo() {
       {
         inputName: document.getElementById("Field3").value,
         inputSettings: {
-          text: thirdPlace,
-        },
+          text: thirdPlace
+        }
+      },
+      (err, data) => {
+        /* Error message and data. */
+        // console.log('Using call SetInputSettings:', err, data);
+      }
+    );
+
+    await obs.call(
+      "SetInputSettings",
+      {
+        inputName: document.getElementById("classSponsor").value,
+        inputSettings: {
+          text: thisSponsor,
+        }
       },
       (err, data) => {
         /* Error message and data. */
